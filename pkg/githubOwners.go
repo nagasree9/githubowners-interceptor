@@ -30,30 +30,31 @@ const OKToTestCommentRegexp = `(^|\n)\/ok-to-test(\r\n|\r|\n|$)`
 
 var client *gh.Client
 
+var acceptedEventTypes = []string{"pull_request", "issue_comment"}
+
 func (w *Interceptor) Process(ctx context.Context, r *triggersv1.InterceptorRequest) *triggersv1.InterceptorResponse {
 	headers := interceptors.Canonical(r.Header)
 	if v := headers.Get("Content-Type"); v == "application/x-www-form-urlencoded" {
 		return interceptors.Fail(codes.InvalidArgument, ErrInvalidContentType.Error())
 	}
 
-	p := triggersv1.GitHubInterceptor{}
+	p := GitHubOwnersInterceptor{}
+
 	if err := interceptors.UnmarshalParams(r.InterceptorParams, &p); err != nil {
 		return interceptors.Failf(codes.InvalidArgument, "failed to parse interceptor params: %v", err)
 	}
 
 	actualEvent := headers.Get("X-GitHub-Event")
 	// Check if the event type is in the allow-list
-	if p.EventTypes != nil {
-		isAllowed := false
-		for _, allowedEvent := range p.EventTypes {
-			if actualEvent == allowedEvent {
-				isAllowed = true
-				break
-			}
+	isAllowed := false
+	for _, allowedEvent := range acceptedEventTypes {
+		if actualEvent == allowedEvent {
+			isAllowed = true
+			break
 		}
-		if !isAllowed {
-			return interceptors.Failf(codes.FailedPrecondition, "event type %s is not allowed", actualEvent)
-		}
+	}
+	if !isAllowed {
+		return interceptors.Failf(codes.FailedPrecondition, "event type %s is not allowed", actualEvent)
 	}
 
 	// header := headers.Get("X-Hub-Signature-256")

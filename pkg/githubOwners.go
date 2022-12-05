@@ -56,22 +56,22 @@ func (w *Interceptor) Process(ctx context.Context, r *triggersv1.InterceptorRequ
 		}
 	}
 
-	header := headers.Get("X-Hub-Signature-256")
-	if header == "" {
-		header = headers.Get("X-Hub-Signature")
-	}
-	if header == "" {
-		return interceptors.Fail(codes.FailedPrecondition, "Must set X-Hub-Signature-256 or X-Hub-Signature header")
-	}
+	// header := headers.Get("X-Hub-Signature-256")
+	// if header == "" {
+	// 	header = headers.Get("X-Hub-Signature")
+	// }
+	// if header == "" {
+	// 	return interceptors.Fail(codes.FailedPrecondition, "Must set X-Hub-Signature-256 or X-Hub-Signature header")
+	// }
 
-	secretToken, err := w.getSecret(ctx, r, p)
-	if err != nil {
-		return interceptors.Failf(codes.FailedPrecondition, "error validating the secret: %v", err)
-	}
+	// secretToken, err := w.getSecret(ctx, r, p)
+	// if err != nil {
+	// 	return interceptors.Failf(codes.FailedPrecondition, "error validating the secret: %v", err)
+	// }
 
-	if err := gh.ValidateSignature(header, []byte(r.Body), []byte(secretToken)); err != nil {
-		return interceptors.Fail(codes.FailedPrecondition, err.Error())
-	}
+	// if err := gh.ValidateSignature(header, []byte(r.Body), []byte(secretToken)); err != nil {
+	// 	return interceptors.Fail(codes.FailedPrecondition, err.Error())
+	// }
 
 	payload, err := parseBody(r.Body, actualEvent)
 	if err != nil {
@@ -103,22 +103,22 @@ func (w *Interceptor) Process(ctx context.Context, r *triggersv1.InterceptorRequ
 	}
 }
 
-func (w *Interceptor) getSecret(ctx context.Context, r *triggersv1.InterceptorRequest, p triggersv1.GitHubInterceptor) (string, error) {
-	if p.SecretRef != nil {
-		return "", nil
-	}
-	// Check the secret to see if it is empty
-	if p.SecretRef.SecretKey == "" {
-		return "", fmt.Errorf("github interceptor secretRef.secretKey is empty")
-	}
+// func (w *Interceptor) getSecret(ctx context.Context, r *triggersv1.InterceptorRequest, p triggersv1.GitHubInterceptor) (string, error) {
+// 	if p.SecretRef != nil {
+// 		return "", nil
+// 	}
+// 	// Check the secret to see if it is empty
+// 	if p.SecretRef.SecretKey == "" {
+// 		return "", fmt.Errorf("github interceptor secretRef.secretKey is empty")
+// 	}
 
-	ns, _ := triggersv1.ParseTriggerID(r.Context.TriggerID)
-	secretToken, err := w.SecretGetter.Get(ctx, ns, p.SecretRef)
-	if err != nil {
-		return "", fmt.Errorf("error getting secret: %v", err)
-	}
-	return string(secretToken), nil
-}
+// 	ns, _ := triggersv1.ParseTriggerID(r.Context.TriggerID)
+// 	secretToken, err := w.SecretGetter.Get(ctx, ns, p.SecretRef)
+// 	if err != nil {
+// 		return "", fmt.Errorf("error getting secret: %v", err)
+// 	}
+// 	return string(secretToken), nil
+// }
 
 func parseBody(body string, eventType string) (payloadDetails, error) {
 	results := payloadDetails{}

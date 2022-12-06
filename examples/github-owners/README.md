@@ -59,3 +59,9 @@ Creates an EventListener that listens for pull_request and issue_comment GitHub 
    ```bash
    {"level":"info","ts":1670356782.2631023,"logger":"fallback","caller":"server/server.go:152","msg":"Interceptor response is: &{Extensions:map[] Continue:false Status:{Code:OK Message:}}"}
    ```
+
+   Taskrun triggers only with True scenario and you can view the taskrun
+
+   ```bash
+   kubectl get taskruns
+   ```

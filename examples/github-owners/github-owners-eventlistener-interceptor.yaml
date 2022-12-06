@@ -10,14 +10,16 @@ spec:
         - ref:
             name: "github-owners"
           params:
-            - name: "secretRef"
-              value:
-                secretName: github-secret
-                secretKey: secretToken
-            - name: "OrgPublicMemberAllowed"
-              value: true
-            - name: "RepoMemberAllowed"
-              value: true
+            # - name: "secretRef"
+            #   value:
+            #     secretName: github-secret
+            #     secretKey: secretToken
+            # The user with the token supplied should have membership of the org to use this feature
+            - name: "orgPublicMemberAllowed"
+              value: false
+            # The user with the token supplied should have membership of the repo to use this feature
+            - name: "repoMemberAllowed"
+              value: false
       bindings:
         - ref: github-owners-pr-binding
       template:
@@ -43,11 +45,8 @@ metadata:
   name: github-owners-pr-binding
 spec:
   params:
-    - name: gitrevision
-      value: $(body.pull_request.head.sha)
     - name: gitrepositoryurl
       value: $(body.repository.clone_url)
-
 ---
 apiVersion: triggers.tekton.dev/v1beta1
 kind: TriggerTemplate
@@ -55,7 +54,6 @@ metadata:
   name: github-owners-template
 spec:
   params:
-    - name: gitrevision
     - name: gitrepositoryurl
   resourcetemplates:
     - apiVersion: tekton.dev/v1beta1
@@ -65,7 +63,10 @@ spec:
       spec:
         taskSpec:
           steps:
-            - image: ubuntu
+            - name: example
+              image: ubuntu
               script: |
                 #! /bin/bash
-                echo "Revision is : $(tt.params.gitrevision). RepoURL is $(tt.params.gitrepositoryurl)"
+
+                echo ""
+                echo "RepoURL is $(tt.params.gitrepositoryurl)"

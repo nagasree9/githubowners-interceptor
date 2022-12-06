@@ -18,6 +18,7 @@ type ownersConfig struct {
 }
 
 type GitHubOwnersInterceptor struct {
-	SecretRef         *triggersv1.SecretRef `json:"secretRef,omitempty"`
-	EnterpriseBaseURL string                `json:"enterpriseBaseURL,omitempty"`
+	SecretRef              *triggersv1.SecretRef `json:"secretRef,omitempty"`
+	OrgPublicMemberAllowed bool                  `json:"orgPublicMemberAllowed,omitempty"`
+	RepoMemberAllowed      bool                  `json:"repoMemberAllowed,omitempty"`
 }

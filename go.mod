@@ -5,6 +5,7 @@ go 1.19
 require (
 	github.com/google/go-github/v31 v31.0.0
 	github.com/tektoncd/triggers v0.22.0
+	golang.org/x/oauth2 v0.1.0
 	google.golang.org/grpc v1.51.0
 	knative.dev/pkg v0.0.0-20221123154742-05b694ec4d3a
 	sigs.k8s.io/yaml v1.3.0
@@ -70,7 +71,6 @@ require (
 	go.uber.org/zap v1.23.0 // indirect
 	golang.org/x/crypto v0.1.0 // indirect
 	golang.org/x/net v0.1.0 // indirect
-	golang.org/x/oauth2 v0.1.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.1.0 // indirect
 	golang.org/x/term v0.1.0 // indirect

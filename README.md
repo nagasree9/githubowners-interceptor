@@ -1,1 +1,3 @@
 # githubowners-interceptor
+
+This repository contains an implementation of github-owners cluster interceptor that checks if the `pull_request` sender or the pull_request comment sender with body `/ok_to_test` is a member of organization or repository or the owners file. If either of these returns true the response to trigger is `continue:true`, if neither of these returns true the response to trigger is `continue:false`

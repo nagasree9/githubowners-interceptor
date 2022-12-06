@@ -29,7 +29,7 @@ spec:
       serviceAccountName: github-owners-bot
       containers:
         - name: github-owners-interceptor
-          image: ko://github.com/nagasree9/githubowners-interceptor/github-owners/cmd/interceptor
+          image: ko://github.com/nagasree9/githubowners-interceptor/cmd/interceptor
           securityContext:
             allowPrivilegeEscalation: false
             # User 65532 is the distroless nonroot user ID

@@ -23,7 +23,10 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/nagasree9/githubowners-interceptor/pkg"
+	"github.com/tektoncd/triggers/pkg/interceptors"
 	"github.com/tektoncd/triggers/pkg/interceptors/server"
+	kubeclient "knative.dev/pkg/client/injection/kube/client"
 	"knative.dev/pkg/injection"
 	"knative.dev/pkg/logging"
 	"knative.dev/pkg/signals"
@@ -52,9 +55,9 @@ func main() {
 	s := server.Server{
 		Logger: logger,
 	}
-	// s.RegisterInterceptor("githubOwners", pkg.Interceptor{
-	// 	SecretGetter: interceptors.DefaultSecretGetter(kubeclient.Get(ctx).CoreV1()),
-	// })
+	s.RegisterInterceptor("github-owners", &pkg.Interceptor{
+		SecretGetter: interceptors.DefaultSecretGetter(kubeclient.Get(ctx).CoreV1()),
+	})
 
 	mux := http.NewServeMux()
 	mux.Handle("/", &s)

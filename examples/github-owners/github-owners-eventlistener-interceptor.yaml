@@ -10,14 +10,16 @@ spec:
         - ref:
             name: "github-owners"
           params:
-            - name: "secretRef"
-              value:
-                secretName: github-secret
-                secretKey: secretToken
+            # - name: "secretRef"
+            #   value:
+            #     secretName: github-secret
+            #     secretKey: secretToken
+            # The user with the token supplied should have membership of the org to use this feature
             - name: "OrgPublicMemberAllowed"
               value: false
+            # The user with the token supplied should have membership of the repo to use this feature
             - name: "RepoMemberAllowed"
-              value: true
+              value: false
       bindings:
         - ref: github-owners-pr-binding
       template:

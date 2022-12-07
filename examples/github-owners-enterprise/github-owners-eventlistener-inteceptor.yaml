@@ -43,8 +43,6 @@ metadata:
   name: github-owners-pr-binding
 spec:
   params:
-    - name: gitrevision
-      value: $(body.pull_request.head.sha)
     - name: gitrepositoryurl
       value: $(body.repository.clone_url)
 
@@ -55,7 +53,6 @@ metadata:
   name: github-owners-template
 spec:
   params:
-    - name: gitrevision
     - name: gitrepositoryurl
   resourcetemplates:
     - apiVersion: tekton.dev/v1beta1
@@ -65,7 +62,10 @@ spec:
       spec:
         taskSpec:
           steps:
-            - image: ubuntu
+            - name: example
+              image: ubuntu
               script: |
                 #! /bin/bash
-                echo "Revision is : $(tt.params.gitrevision). RepoURL is $(tt.params.gitrepositoryurl)"
+
+                echo ""
+                echo "RepoURL is $(tt.params.gitrepositoryurl)"
